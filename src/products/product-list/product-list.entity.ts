@@ -1,7 +1,7 @@
 // product-list.entity.ts
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
-import { Product } from '../product/product';
-import { ListProducts } from '../list-products/list-products';
+import { Product } from '../product/product.entity';
+import { ListProducts } from '../list-products/list-products.entity';
 
 @Entity()
 export class ProductList {

@@ -1,14 +1,14 @@
 // list-products.entity.ts
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToOne } from 'typeorm';
-import { ProductList } from '../product-list/product-list';
-import { User } from 'src/auth/user/user';
+import { ProductList } from '../product-list/product-list.entity';
+import { User } from 'src/auth/user/user.entity';
 
 @Entity()
 export class ListProducts {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({unique: true})
   name: string;
 
   @OneToMany(type => ProductList, productList => productList.list)

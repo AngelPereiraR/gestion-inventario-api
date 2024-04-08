@@ -1,4 +1,3 @@
-// ormconfig.ts
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 
 const config: TypeOrmModuleOptions = {
@@ -10,6 +9,7 @@ const config: TypeOrmModuleOptions = {
   database: 'database',
   entities: [__dirname + '/**/*.entity{.ts,.js}'],
   synchronize: true,
+  ssl: true
 };
 
 export default config;

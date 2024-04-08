@@ -1,8 +1,8 @@
 // products.controller.ts
-import { Controller, Get, Post, Body, Param, Patch, Delete, UseInterceptors, UploadedFile, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Patch, Delete, UseInterceptors, UploadedFile, UseGuards, Put } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ProductService } from './product.service';
-import { Product } from './product';
+import { Product } from './product.entity';
 import { JwtAuthGuard } from 'src/guards/jwt-auth.guard';
 
 @Controller('products')
@@ -37,7 +37,7 @@ export class ProductController {
     return this.productService.remove(parseInt(id, 10));
   }
 
-  @Post('uploadImage/:id')
+  @Put('uploadImage/:id')
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(FileInterceptor('image'))
   async uploadImage(@Param('id') id: string, @UploadedFile() image: Express.Multer.File): Promise<void> {

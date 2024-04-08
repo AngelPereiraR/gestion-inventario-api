@@ -1,8 +1,8 @@
 // user.service.ts
-import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { User } from './user';
+import { User } from './user.entity';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 
@@ -23,9 +23,24 @@ export class UserService {
   }
 
   async register(user: User): Promise<User> {
-    const hashedPassword = await bcrypt.hash(user.password, 10);
-    const newUser = this.userRepository.create({ ...user, password: hashedPassword });
-    return this.userRepository.save(newUser);
+    try {
+       // Verificar si faltan datos por añadir
+       if (!user.email || !user.password) {
+        throw new HttpException('Verifica los datos introducidos, faltan datos por añadir', HttpStatus.BAD_REQUEST);
+      }
+
+      // Verificar si el email ya existe en la base de datos
+      const existingUser = await this.userRepository.findOneBy({ email: user.email });
+      if (existingUser) {
+        throw new HttpException('El email ya está registrado', HttpStatus.BAD_REQUEST);
+      }
+      
+      const hashedPassword = await bcrypt.hash(user.password, 10);
+      const newUser = this.userRepository.create({ ...user, password: hashedPassword });
+      return this.userRepository.save(newUser);
+    } catch(error) {
+      throw error;
+    }
   }
 
   async login(email: string, password: string): Promise<string> {
@@ -33,12 +48,22 @@ export class UserService {
     if (!user || !(await bcrypt.compare(password, user.password))) {
       throw new UnauthorizedException('Credenciales inválidas');
     }
-    return this.jwtService.sign({ id: user.id });
+    return this.jwtService.signAsync({id: user.id}, {secret: process.env.JWT_SEED});
   }
 
   async updateUser(id: number, userData: Partial<User>): Promise<User> {
-    await this.userRepository.update(id, userData);
-    return this.userRepository.findOneBy({id});
+    try {
+      // Verificar si el email ya existe en la base de datos
+      const existingUser = await this.userRepository.findOneBy({ email: userData.email });
+      if (existingUser && existingUser.id == id) {
+        throw new HttpException('El email ya está registrado', HttpStatus.BAD_REQUEST);
+      }
+
+      await this.userRepository.update(id, userData);
+      return this.userRepository.findOneBy({id});
+    } catch (error) {
+      throw error;
+    }
   }
 
   async deleteUser(id: number): Promise<void> {

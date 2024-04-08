@@ -18,17 +18,17 @@ export class Product {
   @Column()
   quantity: string;
 
-  @Column('simple-array', { nullable: true })
-  brands: string[];
+  @Column({ nullable: true })
+  brands: string;
 
-  @Column('simple-array', { nullable: true })
-  categories: string[];
+  @Column({ nullable: true })
+  categories: string;
 
-  @Column('simple-array', { nullable: true })
-  stores: string[];
+  @Column({ nullable: true })
+  stores: string;
 
-  @Column('simple-array', { nullable: true })
-  countries: string[];
+  @Column({ nullable: true })
+  countries: string;
 
   @Column({ nullable: true })
   image: string; // Se almacenará la imagen en formato base64

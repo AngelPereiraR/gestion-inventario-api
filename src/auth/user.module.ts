@@ -1,7 +1,7 @@
 import { Module, forwardRef } from '@nestjs/common';
 import { UserService } from './user/user.service';
 import { UserController } from './user/user.controller';
-import { User } from './user/user';
+import { User } from './user/user.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { JwtModule } from '@nestjs/jwt';
 import { JwtAuthGuard } from 'src/guards/jwt-auth.guard';

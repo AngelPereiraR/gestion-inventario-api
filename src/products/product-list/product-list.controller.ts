@@ -1,6 +1,6 @@
 // product-list.controller.ts
 import { Controller, Get, Post, Body, Param, Delete, Put, UseGuards } from '@nestjs/common';
-import { ProductList } from './product-list';
+import { ProductList } from './product-list.entity';
 import { ProductListService } from './product-list.service';
 import { JwtAuthGuard } from 'src/guards/jwt-auth.guard';
 

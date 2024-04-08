@@ -3,7 +3,7 @@ import { ListProductsService } from './list-products/list-products.service';
 import { ListProductsController } from './list-products/list-products.controller';
 import { JwtAuthGuard } from 'src/guards/jwt-auth.guard';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { ListProducts } from './list-products/list-products';
+import { ListProducts } from './list-products/list-products.entity';
 import { UserModule } from 'src/auth/user.module';
 
 @Module({
