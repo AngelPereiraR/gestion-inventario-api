@@ -9,7 +9,7 @@ import { ListProductsModule } from './products/list-products.module';
 import { ConfigModule } from '@nestjs/config';
 
 // Cambiar este import de local a production según necesidad
-import config from 'ormconfig.debug';
+import config from 'ormconfig';
 
 
 @Module({
