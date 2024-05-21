@@ -12,7 +12,11 @@ export class ProductListService {
   ) {}
 
   async findAll(): Promise<ProductList[]> {
-    return this.productListRepository.find();
+    return this.productListRepository.find({
+      order: {
+        id: 'ASC'
+      }
+    });
   }
 
   async findOne(id: number): Promise<ProductList> {

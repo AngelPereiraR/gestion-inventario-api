@@ -3,19 +3,24 @@ import { HttpException, HttpStatus, Injectable, NotFoundException, UnauthorizedE
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './user.entity';
-import * as bcrypt from 'bcrypt';
+import * as bcryptjs from 'bcryptjs';
 import { JwtService } from '@nestjs/jwt';
+import { JwtPayload } from './interfaces/jwt-payload';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
-    private readonly jwtService: JwtService,
+    private jwtService: JwtService,
   ) {}
 
   async findAll(): Promise<User[]> {
-    return this.userRepository.find();
+    return this.userRepository.find({
+      order: {
+        id: 'ASC'
+      }
+    });
   }
 
   async findOne(id: number): Promise<User> {
@@ -35,7 +40,7 @@ export class UserService {
         throw new HttpException('El email ya está registrado', HttpStatus.BAD_REQUEST);
       }
       
-      const hashedPassword = await bcrypt.hash(user.password, 10);
+      const hashedPassword = await bcryptjs.hash(user.password, 10);
       const newUser = this.userRepository.create({ ...user, password: hashedPassword });
       return this.userRepository.save(newUser);
     } catch(error) {
@@ -43,12 +48,23 @@ export class UserService {
     }
   }
 
-  async login(email: string, password: string): Promise<string> {
-    const user = await this.userRepository.findOne({ where: { email } });
-    if (!user || !(await bcrypt.compare(password, user.password))) {
-      throw new UnauthorizedException('Credenciales inválidas');
+  async login(email: string, password: string): Promise<Object> {
+    const user = await this.userRepository.findOneBy({ email });
+
+    if (!user) {
+      throw new UnauthorizedException('Not valid credentials - email');
     }
-    return this.jwtService.signAsync({id: user.id}, {secret: process.env.JWT_SEED});
+
+    if (!bcryptjs.compareSync(password, user.password)) {
+      throw new UnauthorizedException('Not valid credentials - password');
+    }
+
+    const { password: _, ...rest } = user;
+
+    return {
+      user: rest,
+      token: this.getJwtToken({ id: rest.id, name: rest.name, email: rest.email, lists: rest.lists }),
+    };
   }
 
   async updateUser(id: number, userData: Partial<User>): Promise<User> {
@@ -72,5 +88,10 @@ export class UserService {
       throw new NotFoundException(`Usuario con id ${id} no encontrado`);
     }
     await this.userRepository.remove(user);
+  }
+
+  getJwtToken(payload: JwtPayload) {
+    const token = this.jwtService.sign(payload, { expiresIn: '6h', secret: `${process.env.JWT_SEED}` });
+    return token;
   }
 }
