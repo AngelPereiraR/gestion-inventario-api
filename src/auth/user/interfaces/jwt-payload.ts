@@ -1,4 +1,4 @@
-import { ListProducts } from "src/products/list-products/list-products.entity";
+import { ListProducts } from "../../../products/list-products/list-products.entity";
 
 export interface JwtPayload {
     id: number;

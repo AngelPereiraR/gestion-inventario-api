@@ -1,10 +1,10 @@
 import { Module, forwardRef } from '@nestjs/common';
 import { ListProductsService } from './list-products/list-products.service';
 import { ListProductsController } from './list-products/list-products.controller';
-import { JwtAuthGuard } from 'src/guards/jwt-auth.guard';
+import { JwtAuthGuard } from '../guards/jwt-auth.guard';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ListProducts } from './list-products/list-products.entity';
-import { UserModule } from 'src/auth/user.module';
+import { UserModule } from '../auth/user.module';
 
 @Module({
   imports: [

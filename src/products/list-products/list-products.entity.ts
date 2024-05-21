@@ -1,7 +1,7 @@
 // list-products.entity.ts
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToOne } from 'typeorm';
 import { ProductList } from '../product-list/product-list.entity';
-import { User } from 'src/auth/user/user.entity';
+import { User } from '../../auth/user/user.entity';
 
 @Entity()
 export class ListProducts {

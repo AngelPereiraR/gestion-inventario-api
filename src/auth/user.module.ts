@@ -4,8 +4,8 @@ import { UserController } from './user/user.controller';
 import { User } from './user/user.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { JwtModule } from '@nestjs/jwt';
-import { JwtAuthGuard } from 'src/guards/jwt-auth.guard';
-import { ListProductsModule } from 'src/products/list-products.module';
+import { JwtAuthGuard } from '../guards/jwt-auth.guard';
+import { ListProductsModule } from '../products/list-products.module';
 
 @Module({
     imports: [

@@ -3,7 +3,7 @@ import { Controller, Get, Post, Body, Param, Patch, Delete, UseInterceptors, Upl
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ProductService } from './product.service';
 import { Product } from './product.entity';
-import { JwtAuthGuard } from 'src/guards/jwt-auth.guard';
+import { JwtAuthGuard } from '../../guards/jwt-auth.guard';
 
 @Controller('products')
 export class ProductController {
