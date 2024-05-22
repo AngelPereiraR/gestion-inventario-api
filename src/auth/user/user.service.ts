@@ -15,7 +15,7 @@ export class UserService {
     private jwtService: JwtService,
   ) {}
 
-  async findAll(): Promise<User[]> {
+  async findAll(): Promise<Object[]> {
     return this.userRepository.find({
       order: {
         id: 'ASC'
@@ -23,11 +23,13 @@ export class UserService {
     });
   }
 
-  async findOne(id: number): Promise<User> {
-    return this.userRepository.findOneBy({id});
+  async findOne(id: number): Promise<Object> {
+    return {
+      user: this.userRepository.findOneBy({id})
+    }
   }
 
-  async register(user: User): Promise<User> {
+  async register(user: User): Promise<Object> {
     try {
        // Verificar si faltan datos por añadir
        if (!user.email || !user.password) {
@@ -42,7 +44,10 @@ export class UserService {
       
       const hashedPassword = await bcryptjs.hash(user.password, 10);
       const newUser = this.userRepository.create({ ...user, password: hashedPassword });
-      return this.userRepository.save(newUser);
+      this.userRepository.save(newUser);
+      return {
+        user: newUser
+      }
     } catch(error) {
       throw error;
     }
@@ -67,7 +72,7 @@ export class UserService {
     };
   }
 
-  async updateUser(id: number, userData: Partial<User>): Promise<User> {
+  async updateUser(id: number, userData: Partial<User>): Promise<Object> {
     try {
       // Verificar si el email ya existe en la base de datos
       const existingUser = await this.userRepository.findOneBy({ email: userData.email });
@@ -76,7 +81,9 @@ export class UserService {
       }
 
       await this.userRepository.update(id, userData);
-      return this.userRepository.findOneBy({id});
+      return {
+        user: this.userRepository.findOneBy({id})
+      }
     } catch (error) {
       throw error;
     }

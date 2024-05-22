@@ -9,7 +9,7 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Get()
-  findAll(): Promise<User[]> {
+  findAll(): Promise<Object[]> {
     return this.userService.findAll();
   }
 
@@ -26,23 +26,23 @@ export class UserController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string): Promise<User> {
+  findOne(@Param('id') id: string): Promise<Object> {
     return this.userService.findOne(parseInt(id, 10));
   }
 
   @Post('register')
-  register(@Body() user: User): Promise<User> {
+  register(@Body() user: User): Promise<Object> {
     return this.userService.register(user);
   }
 
   @Post('login')
-  async login(@Body('email') email: string, @Body('password') password: string) {
+  async login(@Body('email') email: string, @Body('password') password: string): Promise<Object> {
     return this.userService.login(email, password);
   }
 
   @Put(':id')
   @UseGuards(JwtAuthGuard)
-  updateUser(@Param('id') id: string, @Body() user: User): Promise<User> {
+  updateUser(@Param('id') id: string, @Body() user: User): Promise<Object> {
     return this.userService.updateUser(parseInt(id, 10), user);
   }
 
